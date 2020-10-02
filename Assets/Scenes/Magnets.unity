@@ -634,7 +634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_UpdateInterval: 0.1
-  m_MagneticFieldArrowInterval: 0.5
+  m_MagneticFieldArrowInterval: 1
   m_MagneticFieldBounds: {x: 10, y: 0, z: 10}
   m_MagneticParticlePrefab: {fileID: 7322456788708140370, guid: d679922af0f1e5044b589ae3e7469626,
     type: 3}
