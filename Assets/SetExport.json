@@ -1,0 +1,72 @@
+{
+    "objects": [
+        {
+            "m_SetObjects": [
+                "Front_End_Shield",
+                "Front_Bearing",
+                "Front_Bearing_Back_Lock",
+                "Front_Bearing_Front_Lock",
+                "Front_End_Shield_Bearing_Screw_Top",
+                "Front_End_Shield_Bearing_Screw_Bottom",
+                "Front_Shield_Bearing_Screw_Nut_Top",
+                "Front_Shield_Bearing_Screw_Nut_Bottom"
+            ]
+        },
+        {
+            "m_SetObjects": [
+                "Back_Bearing",
+                "Back_Bearing_Front_Lock",
+                "Back_End_Shield",
+                "Back_Bearing_Back_Lock",
+                "Back_End_Shield_Bearing_Screw_Top",
+                "Back_End_Shield_Bearing_Screw_Bottom",
+                "Back_Shield_Bearing_Screw_Nut_Top",
+                "Back_Shield_Bearing_Screw_Nut_Bottom"
+            ]
+        },
+        {
+            "m_SetObjects": [
+                "Rotor",
+                "Stator",
+                "Front_Shield_Screw_Left_Down",
+                "Front_Shield_Screw_Left_Up",
+                "Front_Shield_Screw_Right_Down",
+                "Front_Shield_Screw_Right_Up",
+                "Back_Shield_Screw_Left_Down",
+                "Back_Shield_Screw_Left_Up",
+                "Back_Shield_Screw_Right_Down",
+                "Back_Shield_Screw_Right_Up"
+            ]
+        },
+        {
+            "m_SetObjects": [
+                "Fan",
+                "Fan_Cover",
+                "FanCover_Screw1",
+                "FanCover_Screw2",
+                "FanCover_Screw3",
+                "FanCover_Screw4",
+                "Frame",
+                "Front_End_Gasket",
+                "Terminal_Box_Gasket",
+                "Terminal_Box_Lid",
+                "Terminal_Box_Screw_1",
+                "Terminal_Box_Screw_2",
+                "Terminal_Box_Screw_3",
+                "Terminal_Box_Screw_4",
+                "Mounting_Base_Left",
+                "Mounting_Base_Right",
+                "Left_MountingBase_Screw_1",
+                "Left_MountingBase_Screw_2",
+                "Right_MountingBase_Screw_1",
+                "Right_MountingBase_Screw_2",
+                "Hook",
+                "Shaft_Sleeve",
+                "Shaft_Key",
+                "NamePlate",
+                "Wire_Hole_Left_TB",
+                "Wire_Hole_Right_TB"
+            ]
+        }
+    ]
+}
