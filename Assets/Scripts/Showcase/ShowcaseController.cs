@@ -4,6 +4,8 @@ using UnityEngine;
 using NaughtyAttributes;
 using DG.Tweening;
 using System.Linq;
+using UnityEngine.UI;
+using TMPro;
 
 public class ShowcaseController : MonoBehaviour
 {
@@ -44,6 +46,9 @@ public class ShowcaseController : MonoBehaviour
 
     [HorizontalLine(color: EColor.Black)]
 
+    public TextMeshProUGUI m_NowAssemblingText;
+    public TextMeshProUGUI m_OrderOutputText;
+
     [InfoBox("JSON exporting/importing currently disabled.", EInfoBoxType.Warning)]
     [ReadOnly]
     public int ingoreInt;
@@ -63,6 +68,8 @@ public class ShowcaseController : MonoBehaviour
             m_Tweens.Add(new SetTweens());
         }
 
+        SetTextAssembling("---");
+        SetTextOrder("", true);
     }
     [Button]
     public void CopyOriginalPositionsFromAuxTargetObject()
@@ -208,17 +215,27 @@ public class ShowcaseController : MonoBehaviour
     IEnumerator AssembleNextGroupCoroutine(int index)
     {
         m_IsAnimating = true;
+        SetTextAssembling("Assembling: Group" + index);
         if (m_Tweens[index].m_Tweens == null)
         {
             print("Creating a new tween and playing it");
             m_Tweens[index].m_Tweens = new List<Tweener>();
 
+            SetTextOrder("<b>Assembly order:</b>",true);
+
+            int stepNumber = 1;
             foreach (GameObject go in m_Sets[index].m_SetObjects)
             {
                 ObjectOrigin curObj = FindObjectOriginal(go.transform);
-                m_Tweens[index].m_Tweens.Add(go.transform.DOLocalMove(curObj.m_Position, m_TweenLength).SetAutoKill(false));
-                m_Tweens[index].m_Tweens.Add(go.transform.DOLocalRotate(curObj.m_Rotation, m_TweenLength).SetAutoKill(false));
-                yield return m_PauseBetweenTweensTimer;
+                Tweener tp = go.transform.DOLocalMove(curObj.m_Position, m_TweenLength).SetAutoKill(false);
+                Tweener tr = go.transform.DOLocalRotate(curObj.m_Rotation, m_TweenLength).SetAutoKill(false);
+                m_Tweens[index].m_Tweens.Add(tp);
+                m_Tweens[index].m_Tweens.Add(tr);
+                tp.stringId = go.name;
+                SetTextOrder(stepNumber + ". " + tp.stringId);
+                //yield return m_PauseBetweenTweensTimer;
+                yield return tp.WaitForCompletion();
+                stepNumber++;
             }
             
             ObjectOrigin groupOrigin = new ObjectOrigin(m_SetGameobjects[index].transform, m_SetGameobjects[index].transform.position, m_SetGameobjects[index].transform.rotation.eulerAngles);
@@ -255,17 +272,23 @@ public class ShowcaseController : MonoBehaviour
         }
         else
         {
+            SetTextOrder("", true);
             print("Playing a stored sequence");
-            foreach(Tween t in m_Tweens[index].m_Tweens)
+            int stepNumber = 1;
+            foreach (Tween t in m_Tweens[index].m_Tweens)
             {
+                SetTextOrder(stepNumber + ". " + t.stringId);
                 t.PlayForward();
-                yield return m_PauseBetweenTweensTimer;
+                yield return t.WaitForCompletion();
+                //yield return m_PauseBetweenTweensTimer;
+                stepNumber++;
             }
 
         }
 
         m_SetIndex++;
         yield return null;
+        SetTextAssembling("---");
         m_IsAnimating = false;
     }
     IEnumerator AssemblePreviousGroupCoroutine(int index)
@@ -278,15 +301,21 @@ public class ShowcaseController : MonoBehaviour
         else
         {
             m_IsAnimating = true;
-
-            foreach (Tween tween in m_Tweens[index].m_Tweens.Cast<Tween>().Reverse())
+            SetTextAssembling("Disassembling: Group" + index);
+            SetTextOrder("<b>Disassembly order:</b>", true);
+            int stepNumber = 1;
+            foreach (Tween t in m_Tweens[index].m_Tweens.Cast<Tween>().Reverse())
             {
-                tween.PlayBackwards();
-                yield return m_PauseBetweenTweensTimer;
+                SetTextOrder(stepNumber + ". " + t.stringId);
+                t.PlayBackwards();
+                yield return t.WaitForCompletion();
+                //yield return m_PauseBetweenTweensTimer;
+                stepNumber++;
             }
 
             m_SetIndex = index;
             yield return null;
+            SetTextAssembling("---");
             m_IsAnimating = false;
         }
     }
@@ -394,6 +423,18 @@ public class ShowcaseController : MonoBehaviour
             }
             //m_SetsTemp.Add(newSet);
         }
+    }
+
+    void SetTextAssembling(string text)
+    {
+        m_NowAssemblingText.text = text;
+    }
+
+    void SetTextOrder(string text, bool reset = false)
+    {
+        if (reset) { m_OrderOutputText.text = ""; }
+
+        m_OrderOutputText.text += text + System.Environment.NewLine;
     }
 }
 
