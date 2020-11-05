@@ -304,8 +304,16 @@ public class ShowcaseController : MonoBehaviour
             SetTextAssembling("Disassembling: Group" + index);
             SetTextOrder("<b>Disassembly order:</b>", true);
             int stepNumber = 1;
+
+            //print(m_Tweens[index].m_Tweens.Count);
+            //foreach (Tween t in m_Tweens[index].m_Tweens)
+            //{
+            //    print($"doing forward: {t.target.ToString()}");
+            //}
+
             foreach (Tween t in m_Tweens[index].m_Tweens.Cast<Tween>().Reverse())
             {
+                //print($"doing: {t.target.ToString()}");
                 SetTextOrder(stepNumber + ". " + t.stringId);
                 t.PlayBackwards();
                 yield return t.WaitForCompletion();
