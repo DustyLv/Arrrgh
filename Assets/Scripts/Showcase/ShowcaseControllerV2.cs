@@ -57,13 +57,16 @@ namespace ShowcaseV2
         [HorizontalLine(color: EColor.Black)]
 
         public TextMeshProUGUI m_NowAssemblingText;
-        public TextMeshProUGUI m_OrderOutputText;
+        public TextMeshProUGUI m_StepText;
 
         [InfoBox("JSON exporting/importing currently disabled.", EInfoBoxType.Warning)]
         [ReadOnly]
         public int ingoreInt;
 
         public TweenMasterController m_TweenMaster;
+
+        public int m_CurrentStep = 0;
+        public int m_TotalSteps = 0;
 
         //public int m_RemoveFromGroudIndex = 0;
         //public int m_RemoveFromStepIndex = 0;
@@ -93,6 +96,8 @@ namespace ShowcaseV2
                 m_OriginalTransforms.Add(oo);
             }
 
+            m_TotalSteps = 0;
+
             int id = 0;
             foreach(GroupGameObjects ggo in m_GroupGameObjects)
             {
@@ -102,12 +107,14 @@ namespace ShowcaseV2
                 {
                     
                     m_GroupTweens[id].m_Steps.Add(new StepTweens());
+                    m_TotalSteps++;
                 }
                 id++;
             }
 
             SetTextAssembling("---");
-            SetTextOrder("", true);
+            SetStepText();
+            //SetTextOrder("", true);
 
             //print(m_Groups[m_groupIndex].m_Group[0]);
         }
@@ -170,7 +177,7 @@ namespace ShowcaseV2
             }
             else
             {
-                target.localPosition = newRandPos;
+                target.position = newRandPos;
             }
         }
 
@@ -274,17 +281,21 @@ namespace ShowcaseV2
                 if(m_StepIndex < m_Groups[m_groupIndex].m_Group.Count)
                 {
                     //print($"stepIndex:  {m_StepIndex}/{m_Groups[m_groupIndex].m_Group.Count}");
+                    m_CurrentStep++;
                     StartCoroutine(AssembleNextStepCoroutine(/*m_StepIndex*/));
+                    
                 }
                 else if(m_groupIndex + 1 < m_GroupGameObjects.Count)
                 {
                     //print($"groupIndex:  {m_groupIndex}/{m_Groups.Count}");
                     m_groupIndex++;
                     m_StepIndex = 0;
+                    m_CurrentStep++;
                     StartCoroutine(AssembleNextStepCoroutine(/*m_StepIndex*/));
                 }
                 
             }
+            SetStepText();
         }
 
 
@@ -301,15 +312,18 @@ namespace ShowcaseV2
                 m_StepIndex -= 1;
                 if (m_StepIndex >= 0)
                 {
+                    m_CurrentStep--;
                     StartCoroutine(AssemblePreviousStepCoroutine(/*m_StepIndex*/));
                 }
                 else
                 {
                     m_groupIndex--;
                     m_StepIndex = m_Groups[m_groupIndex].m_Group.Count - 1;
+                    m_CurrentStep--;
                     StartCoroutine(AssemblePreviousStepCoroutine(/*m_StepIndex*/));
                 }
             }
+            SetStepText();
         }
 
         IEnumerator AssembleNextStepCoroutine(/*int index*/)
@@ -561,26 +575,39 @@ namespace ShowcaseV2
             string path = "Assets/Resources/GroupExport.txt";
             StreamWriter writer = new StreamWriter(path, true);
 
-            foreach (Group g in m_Groups)
+            //foreach (Group g in m_Groups)
+            //{
+            //    stepID = 0;
+            //    //print($"Group{groupID}");
+            //    writer.WriteLine($"Group{groupID}");
+            //    foreach (GroupStep group in m_Groups[stepID].m_Group)
+            //    {
+            //        writer.WriteLine($"--- Step{stepID}");
+            //        //print($"---Step{stepID}");
+
+            //        foreach (GameObject obj in group.m_GroupStepObjects)
+            //        {
+
+            //            //print($"------{obj.name}");
+            //            writer.WriteLine($"------{obj.name}");
+            //        }
+            //        stepID++;
+
+            //    }
+            //    groupID++;
+            //}
+
+            for (int i = 0; i < m_Groups.Count; i++)
             {
-                stepID = 0;
-                //print($"Group{groupID}");
-                writer.WriteLine($"Group{groupID}");
-                foreach (GroupStep group in m_Groups[m_SetSortTemp].m_Group)
+                writer.WriteLine($"Group{i}");
+                for (int j = 0; j < m_Groups[i].m_Group.Count; j++)
                 {
-                    writer.WriteLine($"--- Step{stepID}");
-                    //print($"---Step{stepID}");
-
-                    foreach (GameObject obj in group.m_GroupStepObjects)
+                    writer.WriteLine($"--- Step{j}");
+                    for (int k = 0; k < m_Groups[i].m_Group[j].m_GroupStepObjects.Count; k++)
                     {
-
-                        //print($"------{obj.name}");
-                        writer.WriteLine($"------{obj.name}");
+                        writer.WriteLine($"------ {m_Groups[i].m_Group[j].m_GroupStepObjects[k].name}");
                     }
-                    stepID++;
-
                 }
-                groupID++;
             }
             writer.Close();
 
@@ -609,15 +636,20 @@ namespace ShowcaseV2
 
         void SetTextAssembling(string text)
         {
-            m_NowAssemblingText.text = text;
+            m_NowAssemblingText.text = $"SOLIS {m_CurrentStep}/{m_TotalSteps}\n{text}";
         }
 
-        void SetTextOrder(string text, bool reset = false)
+        void SetStepText()
         {
-            if (reset) { m_OrderOutputText.text = ""; }
-
-            m_OrderOutputText.text += text + System.Environment.NewLine;
+            //m_StepText.text = $"{m_CurrentStep}/{m_TotalSteps}";
         }
+
+        //void SetTextOrder(string text, bool reset = false)
+        //{
+        //    if (reset) { m_OrderOutputText.text = ""; }
+
+        //    m_OrderOutputText.text += text + System.Environment.NewLine;
+        //}
     }
 
     [System.Serializable]

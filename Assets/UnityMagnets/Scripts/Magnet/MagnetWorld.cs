@@ -75,6 +75,7 @@ public class MagnetWorld : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
         var magnets = FindObjectsOfType<Magnet>();
@@ -139,4 +140,5 @@ public class MagnetWorld : MonoBehaviour
             }
         }
     }
+#endif
 }
