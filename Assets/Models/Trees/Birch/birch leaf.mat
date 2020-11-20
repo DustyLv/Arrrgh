@@ -13,11 +13,10 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 3050
+  m_CustomRenderQueue: 2500
   stringTagMap:
-    RenderType: Transparent
-  disabledShaderPasses:
-  - SHADOWCASTER
+    RenderType: TransparentCutout
+  disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -79,8 +78,8 @@ Material:
     - _CameraFadingEnabled: 0
     - _CameraShadowFadeDist: 1
     - _Cull: 0
-    - _Cutoff: 0
-    - _DstBlend: 10
+    - _Cutoff: 0.1
+    - _DstBlend: 0
     - _Dummy: 0
     - _Emission: 0
     - _EnableBentNormal: 0
@@ -117,22 +116,22 @@ Material:
     - _SAAThreshold: 0.2
     - _ScreenSpaceVariance: 0.1
     - _Shininess: 0.063
-    - _Smoothness: 0.146
+    - _Smoothness: 0.212
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SquashAmount: 1
-    - _SrcBlend: 5
+    - _SrcBlend: 1
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilFail: 0
     - _StencilOp: 0
     - _StencilZFail: 0
-    - _Surface: 1
+    - _Surface: 0
     - _WindQuality: 0
     - _WorkflowMode: 1
     - _WriteMask: 255
     - _ZTest: 4
-    - _ZWrite: 0
+    - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 1}
     - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}

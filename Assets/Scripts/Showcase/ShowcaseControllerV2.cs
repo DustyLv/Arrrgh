@@ -83,7 +83,7 @@ namespace ShowcaseV2
             DOTween.defaultRecyclable = true;
             m_PauseBetweenTweensTimer = new WaitForSeconds(m_PauseBetweenTweens);
 
-            //SaveOriginalPositions();
+            SaveOriginalPositions();
 
             ScatterObjects();
             SaveScatteredPositions();
@@ -144,7 +144,7 @@ namespace ShowcaseV2
             m_OriginalTransforms.Clear();
             foreach (Transform t in m_TargetObject)
             {
-                ObjectOrigin oo = new ObjectOrigin(t, t.localPosition, t.localRotation.eulerAngles);
+                ObjectOrigin oo = new ObjectOrigin(t, t.position, t.localRotation.eulerAngles);
                 m_OriginalTransforms.Add(oo);
             }
         }
@@ -208,8 +208,9 @@ namespace ShowcaseV2
 
             GameObject groupParent = new GameObject();
             groupParent.name = "Group" + m_SetSortTemp;
+            groupParent.transform.position = m_TargetObject.position;
             groupParent.transform.SetParent(m_TargetObject);
-            groupParent.transform.position = Vector3.zero;
+            
 
             int stepID = 0;
             GroupGameObjects ggo = new GroupGameObjects();
@@ -338,7 +339,7 @@ namespace ShowcaseV2
                 foreach (GameObject go in m_Groups[m_groupIndex].m_Group[m_StepIndex].m_GroupStepObjects)
                 {
                     ObjectOrigin curObj = FindObjectOriginal(go.transform);
-                    Tweener tp = go.transform.DOMove(curObj.m_Position, m_TweenLength).SetAutoKill(false);
+                    Tweener tp = go.transform.DOLocalMove(curObj.m_Position, m_TweenLength).SetAutoKill(false);
                     Tweener tr = go.transform.DORotate(curObj.m_Rotation, m_TweenLength).SetAutoKill(false);
                     m_GroupTweens[m_groupIndex].m_Steps[m_StepIndex].m_StepTweens.Add(tp);
                     m_GroupTweens[m_groupIndex].m_Steps[m_StepIndex].m_StepTweens.Add(tr);
