@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
+using UnityEngine.Events;
 
 namespace ShowcaseV2
 {
@@ -67,6 +68,10 @@ namespace ShowcaseV2
 
         public int m_CurrentStep = 0;
         public int m_TotalSteps = 0;
+
+        public bool m_AllStepsComplete = false;
+        public UnityEvent OnAllStepsCompleteEvent = new UnityEvent();
+        public UnityEvent OnStepsDisassembleEvent = new UnityEvent();
 
         //public int m_RemoveFromGroudIndex = 0;
         //public int m_RemoveFromStepIndex = 0;
@@ -269,6 +274,18 @@ namespace ShowcaseV2
             }
         }
 
+        public bool CheckForAllStepsComplete(bool invokeCompleteEvent)
+        {
+            bool check = m_CurrentStep >= m_TotalSteps;
+            
+            if(invokeCompleteEvent && check && OnAllStepsCompleteEvent != null)
+            {
+                OnAllStepsCompleteEvent.Invoke();
+            }
+            return check;
+
+        }
+
         [Button]
         public void AssembleNextGroup()
         {
@@ -276,6 +293,7 @@ namespace ShowcaseV2
             {
                 return;
             }
+
 
             if (m_IsAnimating == false)
             {
@@ -296,6 +314,9 @@ namespace ShowcaseV2
                 }
                 
             }
+
+            m_AllStepsComplete = CheckForAllStepsComplete(true);
+
             SetStepText();
         }
 
@@ -324,6 +345,9 @@ namespace ShowcaseV2
                     StartCoroutine(AssemblePreviousStepCoroutine(/*m_StepIndex*/));
                 }
             }
+
+            m_AllStepsComplete = CheckForAllStepsComplete(false);
+
             SetStepText();
         }
 
