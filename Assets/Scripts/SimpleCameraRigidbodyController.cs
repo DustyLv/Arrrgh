@@ -47,66 +47,66 @@ public class SimpleCameraRigidbodyController : MonoBehaviour
             return Vector3.zero;
         }
         Vector3 direction = new Vector3();
-        
 
-        //if (Input.GetKey(KeyCode.W))
-        //{
-        //    direction += Vector3.forward;
-        //}
-        //if (Input.GetKey(KeyCode.S))
-        //{
-        //    direction += Vector3.back;
-        //}
-        //if (Input.GetKey(KeyCode.A))
-        //{
-        //    direction += Vector3.left;
-        //}
-        //if (Input.GetKey(KeyCode.D))
-        //{
-        //    direction += Vector3.right;
-        //}
-        //if (Input.GetKey(KeyCode.Q))
-        //{
-        //    direction += Vector3.down;
-        //}
-        //if (Input.GetKey(KeyCode.E))
-        //{
-        //    direction += Vector3.up;
-        //}
 
-        if (kb.wKey.isPressed)
+        if (Input.GetKey(KeyCode.W))
         {
             direction += Vector3.forward;
         }
-        if (kb.sKey.isPressed)
+        if (Input.GetKey(KeyCode.S))
         {
             direction += Vector3.back;
         }
-        if (kb.aKey.isPressed)
+        if (Input.GetKey(KeyCode.A))
         {
             direction += Vector3.left;
         }
-        if (kb.dKey.isPressed)
+        if (Input.GetKey(KeyCode.D))
         {
             direction += Vector3.right;
         }
-        if (kb.qKey.isPressed)
+        if (Input.GetKey(KeyCode.Q))
         {
             direction += Vector3.down;
         }
-        if (kb.eKey.isPressed)
+        if (Input.GetKey(KeyCode.E))
         {
             direction += Vector3.up;
         }
+
+        //if (kb.wKey.isPressed)
+        //{
+        //    direction += Vector3.forward;
+        //}
+        //if (kb.sKey.isPressed)
+        //{
+        //    direction += Vector3.back;
+        //}
+        //if (kb.aKey.isPressed)
+        //{
+        //    direction += Vector3.left;
+        //}
+        //if (kb.dKey.isPressed)
+        //{
+        //    direction += Vector3.right;
+        //}
+        //if (kb.qKey.isPressed)
+        //{
+        //    direction += Vector3.down;
+        //}
+        //if (kb.eKey.isPressed)
+        //{
+        //    direction += Vector3.up;
+        //}
         return direction;
     }
 
     void Update()
     {
         translation = Vector3.zero;
-
+        
         // Exit Sample  
-        if (kb.escapeKey.isPressed)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
 #if UNITY_EDITOR
@@ -114,21 +114,21 @@ public class SimpleCameraRigidbodyController : MonoBehaviour
 #endif
         }
         // Hide and lock cursor when right mouse button pressed
-        if (mouse.rightButton.wasPressedThisFrame)
+        if (Input.GetMouseButtonDown(1))
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
         
 
         // Unlock and show cursor when right mouse button released
-        if (mouse.rightButton.wasReleasedThisFrame)
+        if (Input.GetMouseButtonUp(1))
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
 
         // Rotation
-        if (mouse.rightButton.isPressed)
+        if (Input.GetMouseButton(1))
         {
             var mouseMovement = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y") * (invertY ? 1 : -1));
             //var mouseMovement = mouse.
@@ -144,7 +144,7 @@ public class SimpleCameraRigidbodyController : MonoBehaviour
         translation = GetInputTranslationDirection() * Time.deltaTime;
 
         // Speed up movement when shift key held
-        if (kb.shiftKey.isPressed)
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             translation *= 10.0f;
         }

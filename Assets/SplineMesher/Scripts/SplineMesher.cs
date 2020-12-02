@@ -41,7 +41,7 @@ namespace SplineMesher {
         Mesh newMesh;
         MeshRenderer renderComp;
         MeshFilter meshFilterComp;
-        LineManager lineMgrComp;
+        public LineManager lineMgrComp;
         
         UnityAction methodDelegate;
         bool updateFlag = false;
@@ -59,6 +59,11 @@ namespace SplineMesher {
         }
 
         void OnValidate() {
+            ManualValidate();
+        }
+
+        void ManualValidate()
+        {
             ParamConstraints();
             UpdateMesh();
         }
@@ -302,9 +307,11 @@ namespace SplineMesher {
             List<Vector3> bitangentList = lineMgrComp.GetBitangent();
             for (int i = 0; i < vertexList.Count; i++) vertexList[i] += bitangentList[0] * (isRectangle ? rectSize.y : tubeRadius);
         }
-        
+//#if UNITY_EDITOR
+
         void OnRenderObject() {
-            if (lineMgrComp.HasChanged()) OnValidate();
+            if (lineMgrComp.HasChanged()) ManualValidate();
         }
+//#endif
     }
 }

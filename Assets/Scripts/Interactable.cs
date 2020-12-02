@@ -25,15 +25,15 @@ public class Interactable : MonoBehaviour
 
     private Collider m_Collider;
     private POIController m_POI;
-    
 
-    void Start()
+
+    private void Awake()
     {
         if (m_Collider == null) // if this component reference is null/empty, find the component on current gameobject
         {
             m_Collider = GetComponent<Collider>();
         }
-        if(m_Collider == null) // if this component reference is still null/empty, find the component in current objects children
+        if (m_Collider == null) // if this component reference is still null/empty, find the component in current objects children
         {
             m_Collider = GetComponentInChildren<Collider>();
         }
@@ -50,10 +50,15 @@ public class Interactable : MonoBehaviour
         //if (XRSettings.enabled == false)
         //{
         //print($"POI   {m_POI}");
-        //print($"poi button   {m_POI.m_Button}");
+        //print($"poi button   {m_POI.m_Button.gameObject.name}");
         //print($"poi button click   {m_POI.m_Button.onClick}");
-        m_POI.m_Button.onClick.AddListener(() =>  Interact());
+        m_POI.m_Button.onClick.AddListener(() => { Interact(); });
         //}
+    }
+
+    void Start()
+    {
+
 
         if (m_IsFirstInteractable == true)
         {
@@ -69,12 +74,14 @@ public class Interactable : MonoBehaviour
 
     public void Enable()
     {
+        print("interactable enable");
         m_POI.TurnOn();
         m_Collider.enabled = true;
     }
 
     public void Disable()
     {
+        print("interactable disable");
         m_POI.TurnOff();
         m_Collider.enabled = false;
     }
@@ -101,7 +108,7 @@ public class Interactable : MonoBehaviour
         {
             m_POI.TurnOff();
         }
-
+        print("interact got trigered");
         Invoke("OnInteractEnd", m_CustomActionDelay);
     }
 

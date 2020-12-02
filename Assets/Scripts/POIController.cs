@@ -22,9 +22,9 @@ public class POIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        print(gameObject.transform.parent.gameObject.name);
+        //print(gameObject.transform.parent.gameObject.name);
 
-        m_Button = gameObject.GetComponentInChildren<Button>();
+        //m_Button = gameObject.GetComponentInChildren<Button>();
 
         m_Sequence = DOTween.Sequence();
         m_InitScale = transform.localScale;
