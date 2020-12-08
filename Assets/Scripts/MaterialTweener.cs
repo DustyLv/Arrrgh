@@ -41,11 +41,15 @@ public class MaterialTweener : MonoBehaviour
         m_TweenPropertyList = properties;
     }
 
-    public void Tween()
+    private void Tween(Color ColWhite, Color ColBlack)
     {
-        print("Tween start called");
+        //print("Tween start called");
 
-        foreach(TweenProperties tp in m_TweenPropertyList)
+        m_PropBlock.SetColor("_Color_White", ColWhite);
+        m_PropBlock.SetColor("_Color_Black", ColBlack);
+        
+
+        foreach (TweenProperties tp in m_TweenPropertyList)
         {
             m_PropBlock.SetFloat(tp.m_MaterialProperty, 0f);
             float val = m_PropBlock.GetFloat(tp.m_MaterialProperty);
@@ -92,8 +96,16 @@ public class MaterialTweener : MonoBehaviour
 
     }
 
-    public void StartTween()
+    public void StartTween(Color ColWhite, Color ColBlack)
     {
-        Tween();
+        Tween(ColWhite, ColBlack);
+    }
+
+    public void SetDisabledColor(Color _color)
+    {
+        m_Renderer.GetPropertyBlock(m_PropBlock);
+        m_PropBlock.SetColor("_Color_Black", _color);
+        m_PropBlock.SetColor("_Color_White", _color);
+        m_Renderer.SetPropertyBlock(m_PropBlock);
     }
 }

@@ -74,14 +74,14 @@ public class Interactable : MonoBehaviour
 
     public void Enable()
     {
-        print("interactable enable");
+        //print("interactable enable");
         m_POI.TurnOn();
         m_Collider.enabled = true;
     }
 
     public void Disable()
     {
-        print("interactable disable");
+        //print("interactable disable");
         m_POI.TurnOff();
         m_Collider.enabled = false;
     }
@@ -108,7 +108,7 @@ public class Interactable : MonoBehaviour
         {
             m_POI.TurnOff();
         }
-        print("interact got trigered");
+        //print("interact got trigered");
         Invoke("OnInteractEnd", m_CustomActionDelay);
     }
 

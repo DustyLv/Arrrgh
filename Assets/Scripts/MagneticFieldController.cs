@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+//using DG.Tweening;
 
 public class MagneticFieldController : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class MagneticFieldController : MonoBehaviour
 
     public MagneticParticle m_MagneticParticlePrefab;
 
-    public List<MagnetObject> m_Magnets;
+    public List<MagnetObject> m_Magnets = new List<MagnetObject>();
     public List<MagneticParticle> m_MagneticParticles;
 
     private float m_Timer;
@@ -23,7 +23,8 @@ public class MagneticFieldController : MonoBehaviour
     {
         m_Timer = m_UpdateInterval;
         SpawnMagneticParticleGrid();
-        m_Magnets = new List<MagnetObject>(FindObjectsOfType<MagnetObject>());
+
+        m_Magnets.AddRange( new List<MagnetObject>(FindObjectsOfType<MagnetObject>()));
         m_MagneticParticles = new List<MagneticParticle>(FindObjectsOfType<MagneticParticle>());
     }
 
@@ -52,7 +53,7 @@ public class MagneticFieldController : MonoBehaviour
                 attractiveDirection += force * direction;
             }
             //particle.transform.LookAt(attractiveDirection);
-            particle.transform.DOLookAt(attractiveDirection, 0.25f);
+            particle.transform.LookAt(attractiveDirection);
         }
 
         m_Timer = m_UpdateInterval;
@@ -66,9 +67,11 @@ public class MagneticFieldController : MonoBehaviour
             {
                 for (float k = 0; k <= m_MagneticFieldBounds.z; k += m_MagneticFieldArrowInterval)
                 {
-                    Vector3 pos = new Vector3(i - (m_MagneticFieldBounds.x / 2f), j - (m_MagneticFieldBounds.y / 2f), k - (m_MagneticFieldBounds.z / 2f));
+                    Vector3 pos = transform.position;
+                    pos += new Vector3(i - (m_MagneticFieldBounds.x / 2f), j - (m_MagneticFieldBounds.y / 2f), k - (m_MagneticFieldBounds.z / 2f));
                     MagneticParticle p = Instantiate(m_MagneticParticlePrefab, pos, Quaternion.identity);
                     p.transform.SetParent(transform);
+                    p.gameObject.layer = gameObject.layer;
                     m_MagneticParticles.Add(p);
                 }
 

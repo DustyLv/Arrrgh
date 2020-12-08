@@ -10,6 +10,10 @@ public class MaterialTweenerController : MonoBehaviour
 
     public List<TweenProperties> m_PropertyList;
 
+    public Color m_TweenColor_Disabled = Color.black;
+    public Color m_TweenColor_White = Color.black;
+    public Color m_TweenColor_Black = Color.black;
+
     public bool m_OverrideTweenSettings = false;
 
     [ShowIf("m_OverrideTweenSettings")] public string m_MaterialProperty = "_OffsetY";
@@ -21,6 +25,7 @@ public class MaterialTweenerController : MonoBehaviour
     void Start()
     {
         FindTweenersOnObject();
+        TweenStop();
     }
 
     void FindTweenersOnObject()
@@ -50,13 +55,14 @@ public class MaterialTweenerController : MonoBehaviour
         foreach (MaterialTweener tweener in m_MaterialTweeners)
         {
             tweener.Setup(m_PropertyList);
+            tweener.StartTween(m_TweenColor_White, m_TweenColor_Black);
         }
 
 
-        foreach (MaterialTweener tweener in m_MaterialTweeners)
-        {
-            tweener.StartTween();
-        }
+        //foreach (MaterialTweener tweener in m_MaterialTweeners)
+        //{
+            
+        //}
     }
 
     [Button]
@@ -65,6 +71,7 @@ public class MaterialTweenerController : MonoBehaviour
         foreach (MaterialTweener tweener in m_MaterialTweeners)
         {
             tweener.StopTween();
+            tweener.SetDisabledColor(m_TweenColor_Disabled);
         }
     }
 }

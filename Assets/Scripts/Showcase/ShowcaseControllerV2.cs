@@ -77,7 +77,11 @@ namespace ShowcaseV2
         public UnityEvent OnAllStepsCompleteEvent = new UnityEvent();
         public UnityEvent OnStepsDisassembleEvent = new UnityEvent();
 
-        public ToggleGameObject m_MainCanvas;
+        public CanvasGroup m_MainCanvas;
+        public ToggleGameObject m_LoadingCanvas;
+
+        [ReadOnly]
+        public List<GameObject> m_AllObjects = new List<GameObject>();
 
         //public int m_RemoveFromGroudIndex = 0;
         //public int m_RemoveFromStepIndex = 0;
@@ -90,12 +94,29 @@ namespace ShowcaseV2
 
         private IEnumerator Start()
         {
-            //m_MainCanvas.ToggleOff();
+            m_MainCanvas.alpha = 0f;
+            m_MainCanvas.interactable = false;
+            m_MainCanvas.blocksRaycasts = false;
+
+            m_LoadingCanvas.ToggleOn();
+
+
             DOTween.defaultAutoKill = false;
             DOTween.defaultRecyclable = true;
             m_PauseBetweenTweensTimer = new WaitForSeconds(m_PauseBetweenTweens);
 
             SetTextAssembling("---");
+
+            yield return null;
+
+            foreach (Transform t in m_TargetObject)
+            {
+                m_AllObjects.Add(t.gameObject);
+            }
+            yield return new WaitForSeconds(1f);
+            GameObject.FindObjectOfType<PartToggler>().SetUpUI();
+            yield return null;
+
 
             yield return StartCoroutine(SaveOriginalPositions());
 
@@ -128,7 +149,11 @@ namespace ShowcaseV2
 
             yield return null;
 
-            //m_MainCanvas.ToggleOn();
+            m_LoadingCanvas.ToggleOff();
+
+            m_MainCanvas.alpha = 1f;
+            m_MainCanvas.interactable = true;
+            m_MainCanvas.blocksRaycasts = true;
         }
 
         [Button]
