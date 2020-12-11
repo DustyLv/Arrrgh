@@ -31,8 +31,9 @@ namespace ShowcaseV2
         //public List<Transform> m_SetHoldingPoints = new List<Transform>();
         public BoxCollider m_ObjectHoldingVolume;
 
-        public List<BoxCollider> m_ObjectScatterVolumes = new List<BoxCollider>();
-        public BoxCollider m_ScatterVolumeUnified;
+        //public List<BoxCollider> m_ObjectScatterVolumes = new List<BoxCollider>();
+        [HideInInspector] public BoxCollider m_ScatterVolumeUnified;
+        public Transform m_ScatterStartTransform;
 
         public bool m_DoAdditionalScattering = true;
         public int m_ScatterTryIterations = 10;
@@ -107,15 +108,15 @@ namespace ShowcaseV2
 
             SetTextAssembling("---");
 
-            yield return null;
+            //yield return null;
 
-            foreach (Transform t in m_TargetObject)
-            {
-                m_AllObjects.Add(t.gameObject);
-            }
-            yield return new WaitForSeconds(1f);
-            GameObject.FindObjectOfType<PartToggler>().SetUpUI();
-            yield return null;
+            //foreach (Transform t in m_TargetObject)
+            //{
+            //    m_AllObjects.Add(t.gameObject);
+            //}
+            //yield return new WaitForSeconds(1f);
+            //GameObject.FindObjectOfType<PartToggler>().SetUpUI();
+            //yield return null;
 
 
             yield return StartCoroutine(SaveOriginalPositions());
@@ -233,8 +234,110 @@ namespace ShowcaseV2
             //    t.position = newRandPos;
             //}
 
-
             if (true)
+            {
+                Dictionary<GameObject, float> objectVolumeDict = new Dictionary<GameObject, float>();
+                foreach(Transform t in m_TargetObject)
+                {
+                    objectVolumeDict.Add(t.gameObject, VolumeOfMesh(t.gameObject.GetComponent<MeshFilter>().mesh));
+                }
+
+                Dictionary<GameObject, float> sortedByVolume = objectVolumeDict.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+                Vector3 startPos = m_ScatterStartTransform.position;
+
+                Vector3 placePos = startPos;
+                //float currentBiggestVolume = 0f;
+                int row = 1;
+                for (int i = 0; i < sortedByVolume.Count; i++)
+                {
+                    GameObject curObj = sortedByVolume.ElementAt(i).Key;
+                    float curVolume = sortedByVolume.ElementAt(i).Value * 10000f;
+
+                    float remappedVolume = curVolume.Remap(0f, 5000f, 0.1f, 0.75f);
+                    //float adjustedVolume = remappedVolume;
+
+                    //if(adjustedVolume > currentBiggestVolume)
+                    //{
+                    //    currentBiggestVolume = adjustedVolume;
+                    //}
+
+                    Bounds objectMeshBounds = curObj.GetComponent<MeshRenderer>().bounds;
+                    RotateObjectToRestPosition(curObj.transform, objectMeshBounds);
+
+                    placePos.y = curObj.GetComponent<MeshRenderer>().bounds.size.y / 2f;
+
+                    
+                    if(i % 5 == 0 && i != 0)
+                    {
+                        
+                        placePos.x = startPos.x;
+                        //placePos.y = startPos.y;
+                        float moveZAmount = (row) * 0.08f;
+                        placePos.z += (moveZAmount);
+                        //currentBiggestVolume = 0f;
+                        row++;
+                    }
+                    curObj.transform.position = placePos;
+                    placePos.x += 0.5f;
+                }
+
+
+
+                //Vector3 scatterObjectPos = m_ScatterVolumeUnified.transform.position;
+                
+                //startPos.y = 0f;
+                ////Vector3 localStartPos = m_ScatterVolumeUnified.transform.TransformPoint(startPos);
+                //Vector3 curPos = startPos;
+                ////Vector3 curPos = startPos;
+                //float maxHeight = 0f;
+                //foreach(Transform t in m_TargetObject)
+                //{
+                //    Bounds objectMeshBounds = t.gameObject.GetComponent<MeshRenderer>().bounds;
+                //    RotateObjectToRestPosition(t, objectMeshBounds);
+
+                //    //Vector3 objectBounds = t.gameObject.GetComponent<BoxCollider>().size;
+                    
+                //    Vector3 objectBounds = objectMeshBounds.size;
+
+                    
+                //    //print(objectBounds);
+                //    //Vector3 objectExtents = objectBounds / 2f;
+                //    //objectExtents.y = 0;
+
+                //    Vector3 position = new Vector3(curPos.x, curPos.y, curPos.z);
+
+                //    //position = m_ScatterVolumeUnified.transform.TransformPoint(position);
+                //    position.y = 0f;
+                //    position.y += t.gameObject.GetComponent<MeshRenderer>().bounds.size.y / 2f;
+                //    t.position = position;
+
+                //    curPos = position;
+                //    curPos.x -= objectBounds.x * 2f;
+
+                //    //Debug.Log($">> obj bounds z: {objectBounds.z}; maxHeight: {maxHeight}");
+                //    if (objectBounds.z > maxHeight)
+                //    {
+                //        maxHeight = objectBounds.z;
+                //    }
+                //    //
+
+                //    //Vector3 checkPos = m_ScatterVolumeUnified.transform.InverseTransformPoint(t.position);
+                //    //Debug.Log($">> curpos: {curPos}");
+                //    if (curPos.x <= (startPos.x - 3f))
+                //    {
+                //        //print("new line");
+
+                //        curPos.x = startPos.x;
+                //        curPos.z += maxHeight * 2f;
+                //        //maxHeight = 0f;
+                //    }
+                //}
+
+            }
+
+
+            if (false)
             {
                 LayerMask layerMask = LayerMask.GetMask("Scatter");
                 foreach (Transform t in m_TargetObject)

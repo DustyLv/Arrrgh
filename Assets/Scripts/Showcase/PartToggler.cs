@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine.UI;
 using TMPro;
 using ShowcaseV2;
+using NaughtyAttributes;
 
 public class PartToggler : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class PartToggler : MonoBehaviour
     public string m_ShaderTransparent_N = "Shader Graphs/Fresnel";
 
     public GameObject m_UITogglePrefab;
-    public Transform m_UIContentRoot;
+    public Transform m_UIContentRoot_AllParts;
+    //public Transform m_UIContentRoot_Groups;
 
 
     public Transform m_Target;
@@ -21,6 +23,8 @@ public class PartToggler : MonoBehaviour
     private ShowcaseControllerV2 m_ShowcaseController;
     private Shader m_ShaderNormal;
     private Shader m_ShaderTransparent;
+
+    private List<Toggle> m_AllToggles = new List<Toggle>();
 
     private void Awake()
     {
@@ -47,13 +51,20 @@ public class PartToggler : MonoBehaviour
 
     public void SetUpUI()
     {
-        foreach(GameObject obj in m_ShowcaseController.m_AllObjects)
+        foreach(Transform obj in m_Target.transform/*m_ShowcaseController.m_AllObjects*/)
         {
-            GameObject newObject = Instantiate(m_UITogglePrefab, m_UIContentRoot);
+            //Transform root = (obj.childCount > 1) ? m_UIContentRoot_Groups : m_UIContentRoot_AllParts;
+            GameObject newObject = Instantiate(m_UITogglePrefab, m_UIContentRoot_AllParts);
             Toggle toggle = newObject.GetComponent<Toggle>();
+
+
             toggle.onValueChanged.AddListener(delegate {
-                ToggleShader(obj);
+                ToggleShader(obj.gameObject);
             });
+
+            m_AllToggles.Add(toggle);
+
+
             TextMeshProUGUI text = newObject.GetComponentInChildren<TextMeshProUGUI>();
             string formattedText = obj.name.Replace("_", " ");
             text.text = formattedText;
@@ -82,6 +93,28 @@ public class PartToggler : MonoBehaviour
             {
                 rend.material.shader = m_ShaderNormal;
             }
+        }
+    }
+
+    [Button]
+    public void ToggleAll_On()
+    {
+        foreach(Toggle t in m_AllToggles)
+        {
+            //t.Select();
+            t.isOn = true;
+            //t.onValueChanged.Invoke(true);
+        }
+    }
+
+    [Button]
+    public void ToggleAll_Off()
+    {
+        foreach (Toggle t in m_AllToggles)
+        {
+            //t.Select();
+            t.isOn = false;
+            //t.onValueChanged.Invoke(true);
         }
     }
 }

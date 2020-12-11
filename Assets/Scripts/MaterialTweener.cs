@@ -86,7 +86,7 @@ public class MaterialTweener : MonoBehaviour
     public void StopTween()
     {
 
-        print("Stopping tween");
+        //print("Stopping tween");
         foreach(Tween t in m_TweenList)
         {
             t.OnComplete(null);
