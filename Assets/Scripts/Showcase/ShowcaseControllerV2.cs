@@ -337,205 +337,205 @@ namespace ShowcaseV2
             }
 
 
-            if (false)
-            {
-                LayerMask layerMask = LayerMask.GetMask("Scatter");
-                foreach (Transform t in m_TargetObject)
-                {
-                    Bounds objectBounds = t.gameObject.GetComponent<MeshRenderer>().bounds;
-                    RotateObjectToRestPosition(t, objectBounds);
+           // if (false)
+            // {
+            //     LayerMask layerMask = LayerMask.GetMask("Scatter");
+            //     foreach (Transform t in m_TargetObject)
+            //     {
+            //         Bounds objectBounds = t.gameObject.GetComponent<MeshRenderer>().bounds;
+            //         RotateObjectToRestPosition(t, objectBounds);
 
-                    int i = 0;
-                    while (i < m_ScatterTryIterations)
-                    {
-                        //Bounds objectBounds = t.gameObject.GetComponent<MeshRenderer>().bounds;
-                        //RotateObjectToRestPosition(t, objectBounds);
-                        Vector3 randomPosition = GetRandomPositionInsideBox(m_ScatterVolumeUnified);
-                        randomPosition.y = 0f;
-                        randomPosition.y += t.gameObject.GetComponent<MeshRenderer>().bounds.size.y / 2f;
-                        //print(randomPosition);
+            //         int i = 0;
+            //         while (i < m_ScatterTryIterations)
+            //         {
+            //             //Bounds objectBounds = t.gameObject.GetComponent<MeshRenderer>().bounds;
+            //             //RotateObjectToRestPosition(t, objectBounds);
+            //             Vector3 randomPosition = GetRandomPositionInsideBox(m_ScatterVolumeUnified);
+            //             randomPosition.y = 0f;
+            //             randomPosition.y += t.gameObject.GetComponent<MeshRenderer>().bounds.size.y / 2f;
+            //             //print(randomPosition);
 
-                        Vector3 overlapTestBoxScale = objectBounds.size;
-                        Collider[] collidersInsideOverlapBox = new Collider[1];
-                        int numberOfCollidersFound = Physics.OverlapBoxNonAlloc(randomPosition, overlapTestBoxScale, collidersInsideOverlapBox, t.rotation, layerMask);
+            //             Vector3 overlapTestBoxScale = objectBounds.size;
+            //             Collider[] collidersInsideOverlapBox = new Collider[1];
+            //             int numberOfCollidersFound = Physics.OverlapBoxNonAlloc(randomPosition, overlapTestBoxScale, collidersInsideOverlapBox, t.rotation, layerMask);
 
-                        t.position = randomPosition;
+            //             t.position = randomPosition;
 
-                        //Debug.Log($">> Number of overlap colliders for <{t.gameObject.name}> = {numberOfCollidersFound}");
+            //             //Debug.Log($">> Number of overlap colliders for <{t.gameObject.name}> = {numberOfCollidersFound}");
 
-                        if (numberOfCollidersFound == 0)
-                        {
+            //             if (numberOfCollidersFound == 0)
+            //             {
 
-                            //Debug.Log($">> Appropriate position found");
+            //                 //Debug.Log($">> Appropriate position found");
                             
-                            break;
-                        }
-                        else
-                        {
+            //                 break;
+            //             }
+            //             else
+            //             {
 
-                        }
+            //             }
 
-                        i++;
-                        yield return null;
-                    }
-                    yield return null;
-                }
-            }
-
-
-            if (false)
-            {
-                // get all objects into circle list
-                List<ObjectCircle> allObjects = new List<ObjectCircle>();
-                foreach(Transform t in m_TargetObject)
-                {
-                    ObjectCircle oc = new ObjectCircle();
-                    oc.m_Transform = t;
-
-                    Vector2 center = new Vector2(t.position.x, t.position.z);
-                    oc.m_Center = center;
-
-                    Vector3 size = t.gameObject.GetComponent<MeshRenderer>().bounds.size;
-                    oc.m_Radius = Mathf.Max(size.x, size.z);
-                    allObjects.Add(oc);
-                }
-
-                // scatter objects
-                for (int i = 0; i < allObjects.Count; i++)
-                {
-                    //float objectVolume = VolumeOfMesh(allObjects[i].m_Transform.GetComponent<MeshFilter>().sharedMesh);
-                    Vector3 newRandPos = GetRandomPositionInsideBox(m_ScatterVolumeUnified);
-                    newRandPos.y = 0f;
-                    Vector3 size = allObjects[i].m_Transform.gameObject.GetComponent<MeshRenderer>().bounds.size;
-                    newRandPos.y += size.y / 2f;
-                    allObjects[i].m_Transform.position = newRandPos;
-                }
-
-                // sort objects
-                allObjects.Sort(Comparer);
-
-                float minSeparation = 1f;
-
-                float minSeparationSq = minSeparation * minSeparation;
-                for (int i = 0; i < allObjects.Count; i++)
-                {
-                    RotateObjectToRestPosition(allObjects[i].m_Transform, allObjects[i].m_Transform.gameObject.GetComponent<MeshRenderer>().bounds);
-
-                    //float objectVolume = VolumeOfMesh(allObjects[i].m_Transform.GetComponent<MeshFilter>().sharedMesh);
-                    BoxCollider currentCol = m_ScatterVolumeUnified;
-
-                    for (int j = i+1; j < allObjects.Count; j++)
-                    {
-                        if(i == j)
-                        {
-                            continue;
-                        }
-
-                        ObjectCircle ocCurrent = allObjects[i];
-                        ObjectCircle ocOther = allObjects[j];
-
-                        Vector2 AB = ocOther.m_Center - ocCurrent.m_Center;
-                        float r = ocCurrent.m_Radius + ocOther.m_Radius;
-
-                        float lengthSqr = (AB.x * AB.x) + (AB.y * AB.y);
-                        float d = lengthSqr - minSeparationSq;
-                        float minSepSq = Mathf.Min(d, minSeparationSq);
-                        d -= minSepSq;
-
-                        if(d < (r*r) - 0.01f)
-                        {
-                            AB.Normalize();
-                            AB *= (float)((r - Mathf.Sqrt(d)) * 0.5f);
-                            ocOther.m_Center += AB;
-                            ocCurrent.m_Center -= AB;
-                        }
-                    }
-                }
-
-                float damping = 0.1f / (float)(m_ScatterTryIterations);
-
-                for (int i = 0; i < allObjects.Count; i++)
-                {
-                    //float objectVolume = VolumeOfMesh(allObjects[i].m_Transform.GetComponent<MeshFilter>().sharedMesh);
-                    BoxCollider currentCol = m_ScatterVolumeUnified;
-                    Vector2 colCenter = new Vector2(currentCol.transform.position.x, currentCol.transform.position.z);
-                    //Vector2 colCenter = currentCol.center;
-                    //colCenter.y = 0f;
-
-                    Vector2 v = allObjects[i].m_Center - colCenter;
-                    v *= damping;
-                    allObjects[i].m_Center -= v;
-                }
-
-                foreach (ObjectCircle oc in allObjects)
-                {
+            //             i++;
+            //             yield return null;
+            //         }
+            //         yield return null;
+            //     }
+            // }
 
 
+            // if (false)
+            // {
+            //     // get all objects into circle list
+            //     List<ObjectCircle> allObjects = new List<ObjectCircle>();
+            //     foreach(Transform t in m_TargetObject)
+            //     {
+            //         ObjectCircle oc = new ObjectCircle();
+            //         oc.m_Transform = t;
 
-                    Vector3 size = oc.m_Transform.GetComponent<MeshRenderer>().bounds.size;
+            //         Vector2 center = new Vector2(t.position.x, t.position.z);
+            //         oc.m_Center = center;
+
+            //         Vector3 size = t.gameObject.GetComponent<MeshRenderer>().bounds.size;
+            //         oc.m_Radius = Mathf.Max(size.x, size.z);
+            //         allObjects.Add(oc);
+            //     }
+
+            //     // scatter objects
+            //     for (int i = 0; i < allObjects.Count; i++)
+            //     {
+            //         //float objectVolume = VolumeOfMesh(allObjects[i].m_Transform.GetComponent<MeshFilter>().sharedMesh);
+            //         Vector3 newRandPos = GetRandomPositionInsideBox(m_ScatterVolumeUnified);
+            //         newRandPos.y = 0f;
+            //         Vector3 size = allObjects[i].m_Transform.gameObject.GetComponent<MeshRenderer>().bounds.size;
+            //         newRandPos.y += size.y / 2f;
+            //         allObjects[i].m_Transform.position = newRandPos;
+            //     }
+
+            //     // sort objects
+            //     allObjects.Sort(Comparer);
+
+            //     float minSeparation = 1f;
+
+            //     float minSeparationSq = minSeparation * minSeparation;
+            //     for (int i = 0; i < allObjects.Count; i++)
+            //     {
+            //         RotateObjectToRestPosition(allObjects[i].m_Transform, allObjects[i].m_Transform.gameObject.GetComponent<MeshRenderer>().bounds);
+
+            //         //float objectVolume = VolumeOfMesh(allObjects[i].m_Transform.GetComponent<MeshFilter>().sharedMesh);
+            //         BoxCollider currentCol = m_ScatterVolumeUnified;
+
+            //         for (int j = i+1; j < allObjects.Count; j++)
+            //         {
+            //             if(i == j)
+            //             {
+            //                 continue;
+            //             }
+
+            //             ObjectCircle ocCurrent = allObjects[i];
+            //             ObjectCircle ocOther = allObjects[j];
+
+            //             Vector2 AB = ocOther.m_Center - ocCurrent.m_Center;
+            //             float r = ocCurrent.m_Radius + ocOther.m_Radius;
+
+            //             float lengthSqr = (AB.x * AB.x) + (AB.y * AB.y);
+            //             float d = lengthSqr - minSeparationSq;
+            //             float minSepSq = Mathf.Min(d, minSeparationSq);
+            //             d -= minSepSq;
+
+            //             if(d < (r*r) - 0.01f)
+            //             {
+            //                 AB.Normalize();
+            //                 AB *= (float)((r - Mathf.Sqrt(d)) * 0.5f);
+            //                 ocOther.m_Center += AB;
+            //                 ocCurrent.m_Center -= AB;
+            //             }
+            //         }
+            //     }
+
+            //     float damping = 0.1f / (float)(m_ScatterTryIterations);
+
+            //     for (int i = 0; i < allObjects.Count; i++)
+            //     {
+            //         //float objectVolume = VolumeOfMesh(allObjects[i].m_Transform.GetComponent<MeshFilter>().sharedMesh);
+            //         BoxCollider currentCol = m_ScatterVolumeUnified;
+            //         Vector2 colCenter = new Vector2(currentCol.transform.position.x, currentCol.transform.position.z);
+            //         //Vector2 colCenter = currentCol.center;
+            //         //colCenter.y = 0f;
+
+            //         Vector2 v = allObjects[i].m_Center - colCenter;
+            //         v *= damping;
+            //         allObjects[i].m_Center -= v;
+            //     }
+
+            //     foreach (ObjectCircle oc in allObjects)
+            //     {
+
+
+
+            //         Vector3 size = oc.m_Transform.GetComponent<MeshRenderer>().bounds.size;
                     
 
-                    Vector3 pos = new Vector3(oc.m_Center.x, 0f, oc.m_Center.y);
+            //         Vector3 pos = new Vector3(oc.m_Center.x, 0f, oc.m_Center.y);
 
 
 
 
-                    pos += m_ScatterVolumeUnified.transform.position;
-                    pos.y = 0f;
+            //         pos += m_ScatterVolumeUnified.transform.position;
+            //         pos.y = 0f;
 
-                    pos.y += size.y / 2f;
+            //         pos.y += size.y / 2f;
 
                     
 
-                    //Vector3 finalPos = m_ScatterVolumeUnified.transform.InverseTransformPoint(pos);
+            //         //Vector3 finalPos = m_ScatterVolumeUnified.transform.InverseTransformPoint(pos);
 
 
-                    Debug.Log($">> Object: {oc.m_Transform.gameObject.name};; old pos: {oc.m_Transform.position}; new pos: {pos};");
+            //         Debug.Log($">> Object: {oc.m_Transform.gameObject.name};; old pos: {oc.m_Transform.position}; new pos: {pos};");
 
-                    oc.m_Transform.position = pos;
-                }
-
-
-                //foreach (ObjectCircle oc in allObjects)
-                //{
-
-                //    float objectVolume = VolumeOfMesh(oc.m_Transform.GetComponent<MeshFilter>().sharedMesh);
-                //    Vector3 newRandPos = GetRandomPositionInsideBox(ChooseScatterVolume(objectVolume));
-                //    newRandPos.y = 0f;
-                //    Vector3 size = oc.m_Transform.GetComponent<MeshRenderer>().bounds.size;
-                //    newRandPos.y += size.y / 2f;
-                //    oc.m_Transform.position = newRandPos;
-                //}
-            }
-
-            if (false)
-            {
-                foreach (Transform t in m_TargetObject)
-                {
-                    //float objectVolume = VolumeOfMesh(t.GetComponent<MeshFilter>().sharedMesh);
-
-                    //Debug.Log($">> Volume for {t.gameObject.name} - {objectVolume * m_ObjectVolumeMultiplier}");
-
-                    RotateObjectToRestPosition(t, t.gameObject.GetComponent<MeshRenderer>().bounds);  ///  THIS IS IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-                    Vector3 size = t.gameObject.GetComponent<MeshRenderer>().bounds.size;
-                    Vector3 newRandPos = GetRandomPositionInsideBox(m_ScatterVolumeUnified);
-                    newRandPos.y = 0f;
-                    newRandPos.y += size.y / 2f;
-                    t.position = newRandPos;
-
-                }
+            //         oc.m_Transform.position = pos;
+            //     }
 
 
-                if (m_DoAdditionalScattering)
-                {
-                    foreach (Transform t in m_TargetObject)
-                    {
-                        yield return StartCoroutine(PlaceObjectInVolume(t));
+            //     //foreach (ObjectCircle oc in allObjects)
+            //     //{
 
-                    }
-                }
-            }
+            //     //    float objectVolume = VolumeOfMesh(oc.m_Transform.GetComponent<MeshFilter>().sharedMesh);
+            //     //    Vector3 newRandPos = GetRandomPositionInsideBox(ChooseScatterVolume(objectVolume));
+            //     //    newRandPos.y = 0f;
+            //     //    Vector3 size = oc.m_Transform.GetComponent<MeshRenderer>().bounds.size;
+            //     //    newRandPos.y += size.y / 2f;
+            //     //    oc.m_Transform.position = newRandPos;
+            //     //}
+            // }
+
+            // if (false)
+            // {
+            //     foreach (Transform t in m_TargetObject)
+            //     {
+            //         //float objectVolume = VolumeOfMesh(t.GetComponent<MeshFilter>().sharedMesh);
+
+            //         //Debug.Log($">> Volume for {t.gameObject.name} - {objectVolume * m_ObjectVolumeMultiplier}");
+
+            //         RotateObjectToRestPosition(t, t.gameObject.GetComponent<MeshRenderer>().bounds);  ///  THIS IS IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            //         Vector3 size = t.gameObject.GetComponent<MeshRenderer>().bounds.size;
+            //         Vector3 newRandPos = GetRandomPositionInsideBox(m_ScatterVolumeUnified);
+            //         newRandPos.y = 0f;
+            //         newRandPos.y += size.y / 2f;
+            //         t.position = newRandPos;
+
+            //     }
+
+
+            //     if (m_DoAdditionalScattering)
+            //     {
+            //         foreach (Transform t in m_TargetObject)
+            //         {
+            //             yield return StartCoroutine(PlaceObjectInVolume(t));
+
+            //         }
+            //     }
+            // }
             yield return null;
         }
 
@@ -1100,8 +1100,8 @@ namespace ShowcaseV2
         [Button]
         public void ExportGroupsToTextFile()
         {
-            int groupID = 0;
-            int stepID = 0;
+            // int groupID = 0;
+            // int stepID = 0;
 
             string path = "Assets/Resources/GroupExport.txt";
             StreamWriter writer = new StreamWriter(path, true);
@@ -1288,6 +1288,6 @@ namespace ShowcaseV2
     {
         public Transform m_Transform;
         public Vector2 m_Center;
-        public float m_Radius;
+      //  public float m_Radius;
     }
 }

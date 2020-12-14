@@ -26,13 +26,13 @@ public class SimpleCameraRigidbodyController : MonoBehaviour
 
     private Vector3 translation = Vector3.zero;
 
-    private Keyboard kb;
-    private Mouse mouse;
+   // private Keyboard kb;
+  //  private Mouse mouse;
 
     void Start()
     {
-        kb = Keyboard.current;
-        mouse = Mouse.current;
+     //   kb = Keyboard.current;
+     //   mouse = Mouse.current;
         rb = GetComponent<Rigidbody>();
 
         yaw = transform.rotation.eulerAngles.y;
@@ -42,10 +42,10 @@ public class SimpleCameraRigidbodyController : MonoBehaviour
 
     Vector3 GetInputTranslationDirection()
     {
-        if(kb == null)
-        {
-            return Vector3.zero;
-        }
+        // if(kb == null)
+        // {
+        //     return Vector3.zero;
+        // }
         Vector3 direction = new Vector3();
 
 
@@ -106,26 +106,26 @@ public class SimpleCameraRigidbodyController : MonoBehaviour
         translation = Vector3.zero;
         
         // Exit Sample  
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        }
-        // Hide and lock cursor when right mouse button pressed
-        if (Input.GetMouseButtonDown(1))
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+//         if (Input.GetKeyDown(KeyCode.Escape))
+//         {
+//             Application.Quit();
+// #if UNITY_EDITOR
+//             UnityEditor.EditorApplication.isPlaying = false;
+// #endif
+//         }
+        // // Hide and lock cursor when right mouse button pressed
+        // if (Input.GetMouseButtonDown(1))
+        // {
+        //   //  Cursor.lockState = CursorLockMode.Locked;
+        // }
         
 
-        // Unlock and show cursor when right mouse button released
-        if (Input.GetMouseButtonUp(1))
-        {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
+        // // Unlock and show cursor when right mouse button released
+        // if (Input.GetMouseButtonUp(1))
+        // {
+        //     Cursor.visible = true;
+        //     Cursor.lockState = CursorLockMode.None;
+        // }
 
         // Rotation
         if (Input.GetMouseButton(1))
