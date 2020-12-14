@@ -106,7 +106,7 @@ namespace ShowcaseV2
             DOTween.defaultRecyclable = true;
             m_PauseBetweenTweensTimer = new WaitForSeconds(m_PauseBetweenTweens);
 
-            SetTextAssembling("---");
+            SetTextAssembling(" ");
 
             //yield return null;
 
