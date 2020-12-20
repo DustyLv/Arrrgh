@@ -122,4 +122,9 @@ public class KnobRotate : MonoBehaviour
 
     }
 
+public void ButtonRPM(int rpm){
+     _rpmControlScript.SetRPM(rpm);
+    outputText.text = _rpmControlScript.GetRPM().ToString("F0");
+   
+}
 }

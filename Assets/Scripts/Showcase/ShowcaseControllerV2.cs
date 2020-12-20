@@ -63,6 +63,7 @@ namespace ShowcaseV2
         [HorizontalLine(color: EColor.Black)]
 
         public TextMeshProUGUI m_NowAssemblingText;
+    public TextMeshProUGUI m_NowAssemblingText2;
         public TextMeshProUGUI m_StepText;
 
         [InfoBox("JSON exporting/importing currently disabled.", EInfoBoxType.Warning)]
@@ -1168,6 +1169,7 @@ namespace ShowcaseV2
         void SetTextAssembling(string text)
         {
             m_NowAssemblingText.text = $"SOLIS {m_CurrentStep}/{m_TotalSteps}\n{text}";
+      m_NowAssemblingText2.text = $"SOLIS {m_CurrentStep}/{m_TotalSteps}\n{text}";
         }
 
 

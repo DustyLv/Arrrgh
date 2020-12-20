@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Grab
   - Door
+  - Interactable
+  - Teleport
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - Scatter
   - Mask
   - ObjectMasked
-  - 
+  - Teleport
   - 
   - 
   - 

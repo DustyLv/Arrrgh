@@ -6,8 +6,7 @@ using NaughtyAttributes;
 
 public class TweenMasterController : MonoBehaviour
 {
-
-    private float m_TweenTimeScale = 1f;
+[SerializeField]    private float m_TweenTimeScale = 1f;
 
     public float TweenTimeScale 
     { 
