@@ -11,11 +11,16 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/MotorShowcase VR.unity
     guid: f741fd8b784ae3640a80a5d713985505
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MotorShowcase.unity
     guid: b57d668639213064c9365097a1c6a423
+  - enabled: 1
+    path: Assets/Scenes/InteractiveTutorial.unity
+    guid: 642ac0659fc593344a45a0f9b9d5e2f3
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: b4835b38b20603949af9b204f4ad2439,
+      type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: 97a276104bca62744a6c7f31f24fe28a,
       type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 254b235b116ed7f49b82630e77d9c911,
       type: 2}
