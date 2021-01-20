@@ -15,6 +15,10 @@ public class DynamicGrabPoint : MonoBehaviour
     void Start()
     {
         m_XRGrabInteractable = GetComponent<XRGrabInteractable>();
+
+        // This listener assignment is needed, because XRTK uses their own kind of UnityEvent system, and the events can not be assigned in Edit mode through AddPersistentListener.
+        m_XRGrabInteractable.onSelectEntered.AddListener(OnSelectEnter);
+        m_XRGrabInteractable.onSelectExited.AddListener(OnSelectExit);
     }
 
 

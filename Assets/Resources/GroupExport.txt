@@ -3,10 +3,10 @@ Group0
 ------ Front_End_Shield
 ------ Front_Bearing
 --- Step1
------- Front_Bearing_Front_Lock
 ------ Front_Bearing_Back_Lock
------- Front_End_Shield_Bearing_Screw_Top
+------ Front_Bearing_Front_Lock
 ------ Front_End_Shield_Bearing_Screw_Bottom
+------ Front_End_Shield_Bearing_Screw_Top
 ------ Front_Shield_Bearing_Screw_Nut_Bottom
 ------ Front_Shield_Bearing_Screw_Nut_Top
 Group1
@@ -23,12 +23,12 @@ Group1
 Group2
 --- Step0
 ------ Frame
------- Back_Shield_Screw_Right_Up
------- Back_Shield_Screw_Right_Down
------- Back_Shield_Screw_Left_Up
+------ Back_End_Gasket
 ------ Back_Shield_Screw_Left_Down
+------ Back_Shield_Screw_Left_Up
+------ Back_Shield_Screw_Right_Down
+------ Back_Shield_Screw_Right_Up
 --- Step1
------- Stator
 ------ Rotor
 --- Step2
 ------ Front_End_Gasket
@@ -50,7 +50,7 @@ Group3
 ------ Wire_Hole_Left_TB
 ------ Wire_Hole_Right_TB
 --- Step3
------- Clamp
+------ Wire_Terminal
 --- Step4
 ------ Terminal_Box_Gasket
 --- Step5
@@ -69,6 +69,5 @@ Group3
 --- Step7
 ------ Hook
 ------ Shaft_Key
------- Shaft_Sleeve
 --- Step8
 ------ NamePlate
