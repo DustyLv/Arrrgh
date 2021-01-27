@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Grab
   - Door
+  - PlayerHand
+  - Socket
   layers:
   - Default
   - TransparentFX

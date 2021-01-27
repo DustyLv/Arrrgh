@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-
-[CustomEditor(typeof(SocketGenerator))]
-public class SocketGeneratorEditor : Editor
+namespace XRVersion
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(SocketGenerator))]
+    public class SocketGeneratorEditor : Editor
     {
-        DrawDefaultInspector();
-
-        SocketGenerator myScript = (SocketGenerator)target;
-        if (GUILayout.Button("Generate"))
+        public override void OnInspectorGUI()
         {
-            myScript.Generate();
-        }
-    }
+            DrawDefaultInspector();
 
+            SocketGenerator myScript = (SocketGenerator)target;
+            if (GUILayout.Button("Generate"))
+            {
+                myScript.Generate();
+            }
+        }
+
+    }
 }
